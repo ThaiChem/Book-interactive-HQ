@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,165 +6,140 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Interactive Book</title>
 <style>
-    body {
-        margin: 0;
-        font-family: 'Georgia', serif;
-        background: #eae7dc;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #eee;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
 
-    .book {
-        position: relative;
-        width: 90%;
-        max-width: 900px;
-        height: 500px;
-        perspective: 2000px;
-    }
+  .book-container {
+    width: 90%;
+    max-width: 800px;
+    height: 90%;
+    max-height: 500px;
+    perspective: 1500px;
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.2);
+  }
 
-    .page {
-        width: 100%;
-        height: 100%;
-        background: #fffaf0;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        position: absolute;
-        transform-origin: left;
-        transition: transform 1s ease;
-        padding: 20px;
-        box-sizing: border-box;
-        overflow-y: auto;
-        border-radius: 5px;
-        backface-visibility: hidden;
-    }
+  .book {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s ease;
+  }
 
-    .page h1 {
-        font-size: 1.8rem;
-        margin-bottom: 15px;
-    }
+  .page {
+    flex: 0 0 100%;
+    height: 100%;
+    background: white;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
 
-    .page p {
-        line-height: 1.6;
-        font-size: 1.1rem;
-        text-align: justify;
-    }
+  .page img {
+    max-width: 90%;
+    max-height: 70%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
 
-    .page.turn {
-        transform: rotateY(-180deg);
-    }
+  .page h2 {
+    margin: 5px 0;
+    font-size: 20px;
+  }
 
-    .controls {
-        margin-top: 20px;
-        text-align: center;
-    }
+  .page p {
+    font-size: 14px;
+    text-align: center;
+    padding: 0 5px;
+  }
 
-    button {
-        background: #8e6f3e;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        margin: 5px;
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background 0.3s;
-    }
+  .controls {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+  }
 
-    button:hover {
-        background: #a87e4a;
-    }
+  button {
+    padding: 8px 16px;
+    background: navy;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
 
-    @media (max-width: 768px) {
-        .book {
-            height: 400px;
-        }
-        .page h1 {
-            font-size: 1.4rem;
-        }
-        .page p {
-            font-size: 1rem;
-        }
-        button {
-            padding: 8px 15px;
-            font-size: 0.9rem;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .book {
-            height: 350px;
-        }
-        .page h1 {
-            font-size: 1.2rem;
-        }
-        .page p {
-            font-size: 0.9rem;
-        }
-    }
+  button:hover {
+    background: darkblue;
+  }
 </style>
 </head>
 <body>
 
-<div class="book" id="book">
-    <!-- 30 Pages -->
-    <div class="page" id="page1"><img src="page1.jpg"></div>
-    <div class="page" id="page2" style="transform: rotateY(180deg);"><h1>Chapter 2</h1><p>This is the content of Chapter 2.</p></div>
-    <div class="page" id="page3" style="transform: rotateY(180deg);"><h1>Chapter 3</h1><p>This is the content of Chapter 3.</p></div>
-    <div class="page" id="page4" style="transform: rotateY(180deg);"><h1>Chapter 4</h1><p>This is the content of Chapter 4.</p></div>
-    <div class="page" id="page5" style="transform: rotateY(180deg);"><h1>Chapter 5</h1><p>This is the content of Chapter 5.</p></div>
-    <div class="page" id="page6" style="transform: rotateY(180deg);"><h1>Chapter 6</h1><p>This is the content of Chapter 6.</p></div>
-    <div class="page" id="page7" style="transform: rotateY(180deg);"><h1>Chapter 7</h1><p>This is the content of Chapter 7.</p></div>
-    <div class="page" id="page8" style="transform: rotateY(180deg);"><h1>Chapter 8</h1><p>This is the content of Chapter 8.</p></div>
-    <div class="page" id="page9" style="transform: rotateY(180deg);"><h1>Chapter 9</h1><p>This is the content of Chapter 9.</p></div>
-    <div class="page" id="page10" style="transform: rotateY(180deg);"><h1>Chapter 10</h1><p>This is the content of Chapter 10.</p></div>
-    <div class="page" id="page11" style="transform: rotateY(180deg);"><h1>Chapter 11</h1><p>This is the content of Chapter 11.</p></div>
-    <div class="page" id="page12" style="transform: rotateY(180deg);"><h1>Chapter 12</h1><p>This is the content of Chapter 12.</p></div>
-    <div class="page" id="page13" style="transform: rotateY(180deg);"><h1>Chapter 13</h1><p>This is the content of Chapter 13.</p></div>
-    <div class="page" id="page14" style="transform: rotateY(180deg);"><h1>Chapter 14</h1><p>This is the content of Chapter 14.</p></div>
-    <div class="page" id="page15" style="transform: rotateY(180deg);"><h1>Chapter 15</h1><p>This is the content of Chapter 15.</p></div>
-    <div class="page" id="page16" style="transform: rotateY(180deg);"><h1>Chapter 16</h1><p>This is the content of Chapter 16.</p></div>
-    <div class="page" id="page17" style="transform: rotateY(180deg);"><h1>Chapter 17</h1><p>This is the content of Chapter 17.</p></div>
-    <div class="page" id="page18" style="transform: rotateY(180deg);"><h1>Chapter 18</h1><p>This is the content of Chapter 18.</p></div>
-    <div class="page" id="page19" style="transform: rotateY(180deg);"><h1>Chapter 19</h1><p>This is the content of Chapter 19.</p></div>
-    <div class="page" id="page20" style="transform: rotateY(180deg);"><h1>Chapter 20</h1><p>This is the content of Chapter 20.</p></div>
-    <div class="page" id="page21" style="transform: rotateY(180deg);"><h1>Chapter 21</h1><p>This is the content of Chapter 21.</p></div>
-    <div class="page" id="page22" style="transform: rotateY(180deg);"><h1>Chapter 22</h1><p>This is the content of Chapter 22.</p></div>
-    <div class="page" id="page23" style="transform: rotateY(180deg);"><h1>Chapter 23</h1><p>This is the content of Chapter 23.</p></div>
-    <div class="page" id="page24" style="transform: rotateY(180deg);"><h1>Chapter 24</h1><p>This is the content of Chapter 24.</p></div>
-    <div class="page" id="page25" style="transform: rotateY(180deg);"><h1>Chapter 25</h1><p>This is the content of Chapter 25.</p></div>
-    <div class="page" id="page26" style="transform: rotateY(180deg);"><h1>Chapter 26</h1><p>This is the content of Chapter 26.</p></div>
-    <div class="page" id="page27" style="transform: rotateY(180deg);"><h1>Chapter 27</h1><p>This is the content of Chapter 27.</p></div>
-    <div class="page" id="page28" style="transform: rotateY(180deg);"><h1>Chapter 28</h1><p>This is the content of Chapter 28.</p></div>
-    <div class="page" id="page29" style="transform: rotateY(180deg);"><h1>Chapter 29</h1><p>This is the content of Chapter 29.</p></div>
-    <div class="page" id="page30" style="transform: rotateY(180deg);"><h1>Chapter 30</h1><p>This is the content of Chapter 30.</p></div>
-</div>
-
-<div class="controls">
-    <button onclick="prevPage()">&#8592; Previous</button>
-    <button onclick="nextPage()">Next &#8594;</button>
+<div class="book-container">
+  <div class="book" id="book">
+    <!-- Pages will be inserted by JavaScript -->
+  </div>
+  <div class="controls">
+    <button onclick="prevPage()">Previous</button>
+    <button onclick="nextPage()">Next</button>
+  </div>
 </div>
 
 <script>
-    let currentPage = 1;
-    const totalPages = 30;
+  const book = document.getElementById("book");
+  const totalPages = 30;
+  let currentPage = 0;
 
-    function nextPage() {
-        if (currentPage < totalPages) {
-            document.getElementById(`page${currentPage}`).classList.add("turn");
-            currentPage++;
-        }
-    }
+  const imageURL = "https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=800&q=80";
 
-    function prevPage() {
-        if (currentPage > 1) {
-            currentPage--;
-            document.getElementById(`page${currentPage}`).classList.remove("turn");
-        }
+  // Create 30 pages
+  for (let i = 1; i <= totalPages; i++) {
+    const page = document.createElement("div");
+    page.className = "page";
+    page.innerHTML = `
+      <h2>Chapter ${i}</h2>
+      <img src="${imageURL}" alt="Chapter ${i} Image">
+      <p>This is the content of Chapter ${i}.</p>
+    `;
+    book.appendChild(page);
+  }
+
+  function updateBookPosition() {
+    book.style.transform = `translateX(${-currentPage * 100}%)`;
+  }
+
+  function nextPage() {
+    if (currentPage < totalPages - 1) {
+      currentPage++;
+      updateBookPosition();
     }
+  }
+
+  function prevPage() {
+    if (currentPage > 0) {
+      currentPage--;
+      updateBookPosition();
+    }
+  }
 </script>
 
 </body>
 </html>
-
