@@ -15,7 +15,6 @@
     display: flex;
     justify-content: center;
     padding: 20px;
-    /* REMOVIDO align-items center para permitir scroll vertical */
     min-height: 100vh;
     box-sizing: border-box;
   }
@@ -27,26 +26,30 @@
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
-    overflow: visible; /* Para permitir scroll no body */
+    overflow: visible;
     max-height: none;
     box-sizing: border-box;
+    padding: 0; /* diminui fundo extra */
   }
   .page {
-    padding: 15px;
+    padding: 5px; /* diminui espaço interno */
     opacity: 1;
     transition: opacity 0.5s ease;
     text-align: center;
+    background: transparent; /* sem fundo branco */
   }
   .page.fade-out {
     opacity: 0;
   }
   .page img {
-    max-width: 800px; /* largura máxima 800px */
-    width: 100%;      /* largura responsiva */
+    max-width: 800px;
+    width: 100%;
     height: auto;
     object-fit: contain;
-    border-radius: 8px;
-    background: #ddd;
+    border-radius: 0; /* sem borda arredondada */
+    background: transparent; /* sem fundo */
+    display: block;
+    margin: 0 auto;
   }
   .caption {
     margin-top: 12px;
@@ -121,7 +124,7 @@
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
-  // Ajuste o prefixo conforme o nome do seu repositório no GitHub Pages
+  // Ajuste este prefixo para o nome exato do seu repositório GitHub Pages
   const repoPrefix = '/Book-interactive-HQ/';
 
   function renderPage(pageNumber) {
@@ -142,7 +145,7 @@
       pageDiv.classList.remove('fade-out');
       currentPage = pageNumber;
 
-      // Rola para o topo do conteúdo ao trocar página
+      // Rola para o topo ao trocar página
       window.scrollTo({top: 0, behavior: 'smooth'});
     }, 300);
   }
@@ -165,6 +168,7 @@
 
 </body>
 </html>
+
 
 
 
