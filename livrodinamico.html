@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Livro Interativo com Turn.js e Legendas</title>
+<title>Livro Interativo Página Única</title>
 <style>
   body {
     margin: 0;
@@ -13,94 +13,148 @@
     align-items: center;
     height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding: 10px;
   }
-  #book {
-    width: 90vw;
-    max-width: 800px;
-    height: 80vh;
-  }
-  #book .page {
+  .book-container {
+    background: #fff;
+    max-width: 600px;
     width: 100%;
-    height: 100%;
-    background: white;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
+    height: 80vh;
+    max-height: 700px;
+  }
+  .page {
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+    padding: 15px;
+    position: relative;
+    opacity: 1;
+    transition: opacity 0.5s ease;
   }
-  #book .page img {
+  .page.fade-out {
+    opacity: 0;
+  }
+  .page img {
     max-width: 100%;
-    max-height: 85%;
+    max-height: 65vh;
     object-fit: contain;
-    flex-shrink: 0;
+    border-radius: 8px;
+    background: #ddd;
   }
-  #book .caption {
-    padding: 8px 12px;
-    font-size: 1rem;
+  .caption {
+    margin-top: 12px;
+    font-size: 1.1rem;
     color: #444;
     text-align: center;
-    flex-shrink: 0;
-    background: #fafafa;
-    width: 100%;
+  }
+  .navigation {
+    display: flex;
+    justify-content: space-between;
+    background: #f0e6d2;
+    padding: 12px 20px;
     border-top: 1px solid #ddd;
-    box-sizing: border-box;
+  }
+  .navigation button {
+    background-color: #795548;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .navigation button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  .navigation button:not(:disabled):hover {
+    background-color: #5d4037;
+  }
+
+  /* Responsividade */
+  @media (max-width: 480px) {
+    .book-container {
+      height: 90vh;
+    }
+    .caption {
+      font-size: 1rem;
+    }
+    .navigation button {
+      font-size: 0.9rem;
+      padding: 8px 14px;
+    }
   }
 </style>
-
-<!-- Turn.js CDN -->
-<script src="https://cdn.jsdelivr.net/npm/turn.js@4/turn.min.js"></script>
-
 </head>
 <body>
 
-<div id="book">
-  <!-- Páginas serão criadas via JS -->
+<div class="book-container" role="main" aria-label="Livro interativo página única">
+  <div id="page" class="page" aria-live="polite" aria-atomic="true">
+    <!-- Conteúdo da página aqui -->
+  </div>
+  <nav class="navigation">
+    <button id="prevBtn" aria-label="Página anterior">Anterior</button>
+    <button id="nextBtn" aria-label="Próxima página">Próximo</button>
+  </nav>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   const totalPages = 27;
-  const book = document.getElementById('book');
+  let currentPage = 1;
 
-  for(let i = 1; i <= totalPages; i++) {
-    const page = document.createElement('div');
-    page.className = 'page';
+  const pageDiv = document.getElementById('page');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
 
-    page.innerHTML = `
-      <img src="page${i}.jpg" alt="Página ${i}" />
-      <div class="caption">Imagem: page${i}.jpg</div>
-    `;
+  function renderPage(pageNumber) {
+    // Para animação fade:
+    pageDiv.classList.add('fade-out');
 
-    book.appendChild(page);
+    setTimeout(() => {
+      if(pageNumber < 1) pageNumber = 1;
+      if(pageNumber > totalPages) pageNumber = totalPages;
+
+      pageDiv.innerHTML = `
+        <img src="page${pageNumber}.jpg" alt="Imagem da página ${pageNumber}" />
+        <div class="caption">Imagem: page${pageNumber}.jpg</div>
+      `;
+
+      // Atualiza botões
+      prevBtn.disabled = pageNumber === 1;
+      nextBtn.disabled = pageNumber === totalPages;
+
+      pageDiv.classList.remove('fade-out');
+      currentPage = pageNumber;
+    }, 300); // tempo da animação
   }
 
-  $('#book').turn({
-    width: book.clientWidth,
-    height: book.clientHeight,
-    autoCenter: true,
-    acceleration: true,
-    gradients: true,
-    elevation: 50,
-    pages: totalPages
-  });
-
-  document.addEventListener('keydown', (e) => {
-    if(e.key === 'ArrowRight') {
-      $('#book').turn('next');
-    } else if(e.key === 'ArrowLeft') {
-      $('#book').turn('previous');
+  prevBtn.addEventListener('click', () => {
+    if(currentPage > 1) {
+      renderPage(currentPage - 1);
     }
   });
 
-  window.addEventListener('resize', () => {
-    $('#book').turn('size', book.clientWidth, book.clientHeight);
+  nextBtn.addEventListener('click', () => {
+    if(currentPage < totalPages) {
+      renderPage(currentPage + 1);
+    }
   });
+
+  // Inicializa na primeira página
+  renderPage(currentPage);
 </script>
 
 </body>
 </html>
+
 
 
 
