@@ -114,8 +114,10 @@
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
 
+  // Ajuste este prefixo para o nome exato do seu repositório GitHub Pages
+  const repoPrefix = '/Book-interactive-HQ/'; 
+
   function renderPage(pageNumber) {
-    // Para animação fade:
     pageDiv.classList.add('fade-out');
 
     setTimeout(() => {
@@ -123,17 +125,16 @@
       if(pageNumber > totalPages) pageNumber = totalPages;
 
       pageDiv.innerHTML = `
-        <img src="page${pageNumber}.jpg" alt="Imagem da página ${pageNumber}" />
+        <img src="${repoPrefix}page${pageNumber}.jpg" alt="Imagem da página ${pageNumber}" />
         <div class="caption">Imagem: page${pageNumber}.jpg</div>
       `;
 
-      // Atualiza botões
       prevBtn.disabled = pageNumber === 1;
       nextBtn.disabled = pageNumber === totalPages;
 
       pageDiv.classList.remove('fade-out');
       currentPage = pageNumber;
-    }, 300); // tempo da animação
+    }, 300);
   }
 
   prevBtn.addEventListener('click', () => {
