@@ -42,7 +42,8 @@
     opacity: 0;
   }
   .page img {
-    max-width: 100%;
+    max-width: 600px;    /* Limita largura máxima a 600px */
+    width: 100%;         /* Preenche largura disponível até 600px */
     max-height: 85vh;
     object-fit: contain;
     border-radius: 8px;
@@ -80,7 +81,7 @@
   }
 
   /* Responsividade */
-  @media (max-width: 480px) {
+  @media (max-width: 640px) {
     .book-container {
       height: 95vh;
     }
@@ -155,6 +156,7 @@
 
 </body>
 </html>
+
 
 
 
