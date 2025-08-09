@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Livro Interativo com Efeito de Virar Página</title>
+<title>Livro Interativo com Turn.js e Legendas</title>
 <style>
   body {
-    margin: 0; 
+    margin: 0;
     background: #f5f1e9;
     display: flex;
     justify-content: center;
@@ -14,176 +14,93 @@
     height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
-  .book {
+  #book {
     width: 90vw;
     max-width: 800px;
     height: 80vh;
-    perspective: 2000px;
-    position: relative;
-    background: #fff;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    border-radius: 12px;
-    overflow: hidden;
   }
-
-  .pages {
+  #book .page {
     width: 100%;
     height: 100%;
-    display: flex;
-  }
-
-  .page {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
     background: white;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
-
-  .page img {
-    width: 100%;
-    height: 60%;
+  #book .page img {
+    max-width: 100%;
+    max-height: 85%;
     object-fit: contain;
-    background: #ddd;
+    flex-shrink: 0;
   }
-
-  .content {
-    padding: 15px;
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  .content h2 {
-    margin-top: 0;
-    font-size: 1.6rem;
-    color: #333;
-  }
-  .content p {
-    color: #555;
-    line-height: 1.4;
+  #book .caption {
+    padding: 8px 12px;
     font-size: 1rem;
-  }
-
-  /* Botões transparentes para virar páginas, ocupam metade do livro */
-
-  .turn-btn {
-    position: absolute;
-    top: 0;
-    width: 50%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 10;
-    user-select: none;
-  }
-  .turn-btn.left {
-    left: 0;
-  }
-  .turn-btn.right {
-    right: 0;
-  }
-
-  /* Animação de virar página */
-  .page.flip {
-    animation: flipPage 0.6s forwards;
-  }
-
-  @keyframes flipPage {
-    from {
-      transform: rotateY(0deg);
-      z-index: 1;
-    }
-    to {
-      transform: rotateY(-180deg);
-      z-index: 10;
-    }
-  }
-
-  /* Responsivo */
-  @media (max-width: 600px) {
-    .book {
-      height: 70vh;
-    }
-    .content h2 {
-      font-size: 1.3rem;
-    }
-    .content p {
-      font-size: 0.9rem;
-    }
+    color: #444;
+    text-align: center;
+    flex-shrink: 0;
+    background: #fafafa;
+    width: 100%;
+    border-top: 1px solid #ddd;
+    box-sizing: border-box;
   }
 </style>
+
+<!-- Turn.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/turn.js@4/turn.min.js"></script>
+
 </head>
 <body>
 
-<div class="book" role="region" aria-label="Livro interativo">
-  <div class="turn-btn left" aria-label="Página anterior"></div>
-  <div class="turn-btn right" aria-label="Próxima página"></div>
-
-  <div class="pages">
-    <div class="page" id="page-left" aria-live="polite" aria-atomic="true">
-      <!-- Conteúdo da página esquerda -->
-    </div>
-    <div class="page" id="page-right" aria-live="polite" aria-atomic="true">
-      <!-- Conteúdo da página direita -->
-    </div>
-  </div>
+<div id="book">
+  <!-- Páginas serão criadas via JS -->
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   const totalPages = 27;
-  let currentPage = 1; // começa na página 1 (lado esquerdo)
+  const book = document.getElementById('book');
 
-  const pageLeft = document.getElementById('page-left');
-  const pageRight = document.getElementById('page-right');
-  const btnPrev = document.querySelector('.turn-btn.left');
-  const btnNext = document.querySelector('.turn-btn.right');
+  for(let i = 1; i <= totalPages; i++) {
+    const page = document.createElement('div');
+    page.className = 'page';
 
-  // Função para criar o conteúdo da página
-  function createPageContent(pageNumber) {
-    if(pageNumber < 1 || pageNumber > totalPages) {
-      return `<div style="display:flex;justify-content:center;align-items:center;height:100%;color:#888;font-size:1.2rem;">
-        Página em branco
-      </div>`;
-    }
-
-    return `
-      <img src="page${pageNumber}.jpg" alt="Imagem da página ${pageNumber}" />
-      <div class="content">
-        <h2>Página ${pageNumber}</h2>
-        <p>Conteúdo da página ${pageNumber}. Aqui você pode colocar texto, explicações, imagens e mais.</p>
-      </div>
+    page.innerHTML = `
+      <img src="page${i}.jpg" alt="Página ${i}" />
+      <div class="caption">Imagem: page${i}.jpg</div>
     `;
+
+    book.appendChild(page);
   }
 
-  // Atualiza as duas páginas do livro
-  function updatePages() {
-    pageLeft.innerHTML = createPageContent(currentPage);
-    pageRight.innerHTML = createPageContent(currentPage + 1);
-  }
+  $('#book').turn({
+    width: book.clientWidth,
+    height: book.clientHeight,
+    autoCenter: true,
+    acceleration: true,
+    gradients: true,
+    elevation: 50,
+    pages: totalPages
+  });
 
-  // Ir para página anterior
-  btnPrev.addEventListener('click', () => {
-    if(currentPage > 1) {
-      currentPage -= 2;
-      if(currentPage < 1) currentPage = 1;
-      updatePages();
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'ArrowRight') {
+      $('#book').turn('next');
+    } else if(e.key === 'ArrowLeft') {
+      $('#book').turn('previous');
     }
   });
 
-  // Ir para próxima página
-  btnNext.addEventListener('click', () => {
-    if(currentPage + 2 <= totalPages) {
-      currentPage += 2;
-      updatePages();
-    }
+  window.addEventListener('resize', () => {
+    $('#book').turn('size', book.clientWidth, book.clientHeight);
   });
-
-  // Inicializa o livro
-  updatePages();
 </script>
 
 </body>
 </html>
+
 
 
